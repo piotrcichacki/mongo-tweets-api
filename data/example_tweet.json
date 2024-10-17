@@ -1,0 +1,43 @@
+[
+    {
+    "id": "123",
+    "lang": "pl",
+    "text": "tweet text",
+    "entities": {
+      "mentions": [
+        {
+          "id": "123",
+          "end": 2,
+          "start": 1,
+          "username": "username"
+        }
+      ]
+    },
+    "author_id": "123",
+    "created_at": "2024-10-17T00:00:00.000Z",
+    "edit_controls": {
+      "edits_remaining": 1,
+      "is_edit_eligible": false
+    },
+    "public_metrics": {
+      "like_count": 0,
+      "quote_count": 0,
+      "reply_count": 0,
+      "retweet_count": 0,
+      "bookmark_count": 0,
+      "impression_count": 0
+    },
+    "reply_settings": "everyone",
+    "conversation_id": "123",
+    "referenced_tweets": [
+      {
+        "id": "123",
+        "type": "retweeted"
+      }
+    ],
+    "possibly_sensitive": false,
+    "edit_history_tweet_ids": [
+      "123"
+    ]
+  }
+]
