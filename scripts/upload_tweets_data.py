@@ -1,7 +1,7 @@
 import json
 from typing import List
 
-from mongo_tweets_api.lib.mongo.client import create_mongo_client
+from mongo_tweets_api.mongo.client import create_mongo_client
 
 
 def load_json(filepath: str) -> List[dict]:
@@ -16,7 +16,14 @@ def set_id_to_mongo_collection_id(tweet: dict) -> dict:
 
 
 if __name__ == "__main__":
-    mongo_client = create_mongo_client()
+    mongo_client = create_mongo_client(
+            host="localhost",
+            port=27017,
+            username="root",
+            password="example",
+            database="service",
+            collection="tweets",
+    )
     tweets = load_json("../data/tweets.json")
     tweets = [set_id_to_mongo_collection_id(tweet) for tweet in tweets]
     mongo_client.insert_many(tweets)

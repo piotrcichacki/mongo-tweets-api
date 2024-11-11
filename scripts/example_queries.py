@@ -2,12 +2,12 @@ from typing import List
 
 import pymongo
 
-from mongo_tweets_api.lib.mongo.client import create_mongo_client, MongoDBClient
+from mongo_tweets_api.mongo.client import MongoDBClient, create_mongo_client
 
 
 def get_author_tweets_text(client: MongoDBClient, author_id: str) -> List[dict]:
     query = {"author_id": author_id}
-    projection = {"_id": 0, "id": 1, "text": 1}
+    projection = {"_id": 0, "text": 1}
     return [document for document in client.collection.find(query, projection)]
 
 
@@ -44,9 +44,19 @@ def aggregate_authors_tweets_public_metrics_to_new_collection(client: MongoDBCli
 
 
 if __name__ == "__main__":
-    mongo_client = create_mongo_client()
-
-    aggregate_authors_tweets_public_metrics_to_new_collection(client=mongo_client, lang="pl")
+    mongo_client = create_mongo_client(
+        host="localhost",
+        port=27017,
+        username="root",
+        password="example",
+        database="service",
+        collection="tweets",
+    )
 
     response = get_author_tweets_text(client=mongo_client, author_id="2302131097")
+    # response = get_author_tweets_count(client=mongo_client, author_id="2302131097")
+    # response = get_author_most_liked_tweet(client=mongo_client, author_id="2302131097")
+    # response = get_tweets_with_username_mention(client=mongo_client, username="__Lewica")
+    # aggregate_authors_tweets_public_metrics_to_new_collection(client=mongo_client, lang="pl")
+
     print(response)

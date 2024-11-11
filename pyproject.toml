@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mongo_tweets_api"
-version = "0.0.1"
+version = "0.1.0"
 authors = [
   { name="Piotr Cichacki", email="piotr.cichacki00@gmail.com" },
 ]
-description = "Tweets service based on mongo db"
+description = "Tweets service based on mongo database"
 readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
