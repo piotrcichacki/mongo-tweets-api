@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import List
 
 from pymongo import MongoClient
 from pymongo.synchronous.collection import Collection
@@ -11,42 +11,11 @@ class MongoDBClient:
     _client = MongoClient
     database: str
     collection: str
-    _projection: Optional[dict] = None
 
-    def __init__(
-        self,
-        host: str,
-        port: int,
-        username: str,
-        password: str,
-        database: str,
-        collection: str,
-        include: Optional[List[str]] = None,
-        exclude: Optional[List[str]] = None
-    ) -> None:
-        self._client = MongoClient(
-            host=host,
-            port=port,
-            username=username,
-            password=password,
-        )
+    def __init__(self, host: str, port: int, username: str, password: str, database: str, collection: str) -> None:
+        self._client = MongoClient(host=host, port=port, username=username, password=password)
         self.database_name = database
         self.collection_name = collection
-        self._projection = self.create_projection(include, exclude)
-
-    @staticmethod
-    def create_projection(include: Optional[List[str]] = None, exclude: Optional[List[str]] = None) -> Optional[dict]:
-        _projection = {}
-        if include:
-            _projection.update({field: 1 for field in include})
-        if exclude:
-            _projection.update({field: 0 for field in exclude})
-        if _projection:
-            return _projection
-
-    @property
-    def projection(self) -> Optional[dict]:
-        return self._projection
 
     @property
     def database(self) -> Database:
@@ -73,10 +42,10 @@ class MongoDBClient:
         return response.acknowledged
 
     def get(self, query: dict) -> dict:
-        return self.collection.find_one(query, self.projection)
+        return self.collection.find_one(query)
 
-    def get_many(self, query: dict) -> List[dict]:
-        return [document for document in self.collection.find(query, self.projection)]
+    def get_many(self, query: dict, *args, **kwargs) -> List[dict]:
+        return [document for document in self.collection.find(query, *args, **kwargs)]
 
     def delete(self, query: dict) -> bool:
         response = self.collection.delete_one(query)
@@ -87,12 +56,14 @@ class MongoDBClient:
         return response.acknowledged
 
 
-def create_mongo_client() -> MongoDBClient:
+def create_mongo_client(
+    host: str, port: int, username: str, password: str, database: str, collection: str
+) -> MongoDBClient:
     return MongoDBClient(
-        host="localhost",
-        port=27017,
-        username="root",
-        password="example",
-        database="service",
-        collection="tweets",
+        host=host,
+        port=port,
+        username=username,
+        password=password,
+        database=database,
+        collection=collection,
     )

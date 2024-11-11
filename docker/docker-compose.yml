@@ -1,8 +1,12 @@
 # Use root/example as user/password credentials
 version: '3.1'
 
-services:
+networks:
+  mongo_tweets_api_network:
+    driver: bridge
+    external: false
 
+services:
   mongo:
     image: mongo
     restart: always
@@ -11,6 +15,8 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
+    networks:
+      - mongo_tweets_api_network
 
   mongo-express:
     image: mongo-express
@@ -22,3 +28,21 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
       ME_CONFIG_BASICAUTH: false
+    networks:
+      - mongo_tweets_api_network
+
+  tweets_api:
+    container_name: tweets_api
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    command: uvicorn src.mongo_tweets_api.main:app --host 0.0.0.0 --port 8000 --reload
+    restart: always
+    ports:
+      - 8000:8000
+    volumes:
+      - ..:/app
+    depends_on:
+      - mongo
+    networks:
+      - mongo_tweets_api_network
