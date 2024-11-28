@@ -16,6 +16,8 @@ You can access the database using web-based MongoDB admin interface provided und
 You can check how to communicate with the API in the documentation available at `localhost:8000/docs`.
 Or you can see the raw OpenAPI schema with the descriptions of all API available at `localhost:8000/openapi.json`.
 
+3. Redis is running at `localhost:6379` and is used to cache responses from the API.
+
 ### Stop service
 
 Kill the containers and reset the volumes.

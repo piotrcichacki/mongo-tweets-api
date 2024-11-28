@@ -1,6 +1,7 @@
 from typing import List, Any
 
 from fastapi import APIRouter, Path, HTTPException, Query, Body, status, Depends
+from fastapi_cache.decorator import cache
 from typing_extensions import Annotated
 
 from mongo_tweets_api.common.dependencies import create_mongo_repository_dependency
@@ -20,6 +21,7 @@ router = APIRouter(
     response_model=List[Tweet],
     tags=["get"],
 )
+@cache(namespace="tweets", expire=30)
 async def get_tweets(
     repository: Annotated[MongoDBRepository, Depends(create_mongo_repository_dependency)],
     skip: Annotated[int, Query(description="The number of tweets to omit when returning the results", ge=0)] = 0,
@@ -34,6 +36,7 @@ async def get_tweets(
     response_model=Tweet,
     tags=["get"],
 )
+@cache(namespace="tweets", expire=30)
 async def get_tweet_by_id(
     tweet_id: Annotated[str, Path(description="Tweet identifier")],
     repository: Annotated[MongoDBRepository, Depends(create_mongo_repository_dependency)],
